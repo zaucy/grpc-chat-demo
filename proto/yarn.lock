@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@grpc-gen/protoc-gen-grpc-web@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@grpc-gen/protoc-gen-grpc-web/-/protoc-gen-grpc-web-0.3.0.tgz#a09f75208507053dba8a8c6f84841390cd83c96e"
+"@grpc-gen/protoc-gen-grpc-web@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@grpc-gen/protoc-gen-grpc-web/-/protoc-gen-grpc-web-0.4.0.tgz#6249f3b66c048c098cfd89f7b5f35a0629f8ec76"
   dependencies:
     download "^7.0.0"
 

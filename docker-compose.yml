@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nginx:
+    depends_on:
+      - server
+      - web
+    build: ./nginx/
+  proto:
+    image: grpc-chat-demo/proto:latest
+    build: ./proto/
+  server:
+    image: grpc-chat-demo/server:latest
+    build: ./server/
+  web:
+    image: grpc-chat-demo/web:latest
+    build: ./web/

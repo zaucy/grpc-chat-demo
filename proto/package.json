@@ -11,7 +11,7 @@
     "build": "grpc-gen"
   },
   "devDependencies": {
-    "@grpc-gen/protoc-gen-grpc-web": "^0.3.0",
+    "@grpc-gen/protoc-gen-grpc-web": "^0.4.0",
     "google-protobuf": "^3.6.0",
     "grpc": "^1.13.0",
     "grpc-gen": "^1.2.0",
