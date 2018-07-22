@@ -8,7 +8,7 @@ const {
   LoginRequest,
 } = require("@grpc-chat-demo/proto/web");
 
-const client = new ChatClient("http://" + location.hostname + ":50030");
+const client = new ChatClient(location.origin);
 window.client = client;
 
 const inputForm = document.querySelector('#input-form');

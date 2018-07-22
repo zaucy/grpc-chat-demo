@@ -1,16 +1,24 @@
 version: '3'
 services:
-  nginx:
-    depends_on:
-      - server
-      - web
-    build: ./nginx/
+  # Enable if you use grpc-web mode=base64
+  # nginx:
+  #   depends_on:
+  #     - server
+  #     - web
+  #   build: ./nginx/
+  #   ports:
+  #     - 0.0.0.0:443:443
+  #     - 0.0.0.0:80:80
   proto:
     image: grpc-chat-demo/proto:latest
     build: ./proto/
   server:
+    depends_on:
+      - proto
     image: grpc-chat-demo/server:latest
     build: ./server/
   web:
+    depends_on:
+      - proto
     image: grpc-chat-demo/web:latest
     build: ./web/

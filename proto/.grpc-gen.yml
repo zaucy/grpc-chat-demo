@@ -10,7 +10,8 @@ output:
   - grpc-web:
       dir: dist/web
       options:
-        mode: grpcweb
+        # mode: grpcweb
+        mode: base64
         import_style: commonjs-grpc-gen
   - js:
       dir: dist/node
