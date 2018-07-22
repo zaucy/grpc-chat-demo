@@ -1,0 +1,20 @@
+{
+  "name": "@grpc-chat-demo/proto",
+  "version": "1.0.0",
+  "description": "gRPC chat demo proto files and commonjs distribution files",
+  "main": "index.js",
+  "browser": "web.js",
+  "repository": "https://github.com/zaucy/@grpc-chat-demo/proto",
+  "author": "Ezekiel Warren",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "grpc-gen"
+  },
+  "devDependencies": {
+    "@grpc-gen/protoc-gen-grpc-web": "^0.3.0",
+    "google-protobuf": "^3.6.0",
+    "grpc": "^1.13.0",
+    "grpc-gen": "^1.2.0",
+    "grpc-tools": "^1.6.6"
+  }
+}

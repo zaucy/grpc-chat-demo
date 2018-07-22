@@ -1,0 +1,58 @@
+input, button,
+html, body {
+  font-family: 'Roboto', sans-serif;
+}
+
+#messages {
+
+  .msg-wrap {
+    background-color: #fdfdfd;
+  }
+
+  .author {
+    font-size: 0.65em;
+    color: #ccc;
+    padding-top: 0.25em;
+    margin-top: 0.1em;
+  }
+
+  .msg {
+    font-size: 0.75em;
+    white-space: pre-line;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.1em;
+  }
+
+}
+
+#input-form {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background-color: #f1f1f1;
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    border-radius: 3px;
+    background-color: white;
+    font-size: 1.25em;
+    padding: 0.35em;
+  }
+
+  button {
+    border: none;
+    border-radius: 3px;
+    font-size: 1.25em;
+    padding: 0.35em;
+    margin-left: 0.35em;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

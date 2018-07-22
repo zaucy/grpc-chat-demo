@@ -1,0 +1,23 @@
+srcs_dir: ./src/
+srcs:
+  - chat.proto
+output:
+  - js:
+      dir: dist/web
+      options:
+        import_style: commonjs
+        binary: true
+  - grpc-web:
+      dir: dist/web
+      options:
+        mode: grpcweb
+        import_style: commonjs-grpc-gen
+  - js:
+      dir: dist/node
+      options:
+        import_style: commonjs
+        binary: true
+  - grpc-node:
+      dir: dist/node
+      custom: true
+      plugin: grpc_tools_node_protoc_plugin
