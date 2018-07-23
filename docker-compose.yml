@@ -9,6 +9,14 @@ services:
   #   ports:
   #     - 0.0.0.0:443:443
   #     - 0.0.0.0:80:80
+  envoy:
+    depends_on:
+      - server
+      - web
+    build: ./envoy/
+    ports:
+      - 0.0.0.0:443:443
+      - 0.0.0.0:80:80
   proto:
     image: grpc-chat-demo/proto:latest
     build: ./proto/

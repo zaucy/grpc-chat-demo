@@ -1,28 +1,50 @@
 require("./styles.scss");
 
+const localforage = require("localforage");
 const grpc = require("@grpc-gen/grpc-web");
 
 const {
   ChatClient,
   JoinChannelRequest,
   LoginRequest,
+  ChatMessageRequest,
 } = require("@grpc-chat-demo/proto/web");
 
 const client = new ChatClient(location.origin);
-window.client = client;
 
 const inputForm = document.querySelector('#input-form');
 const inputEl = document.querySelector('#input');
 const buttonEl = document.querySelector("#submit-btn");
 const messagesEl = document.querySelector('#messages');
+const metadata = {};
 
 let username = "";
 let channel = "";
+let channelStream = null;
+
+function disableInput(disabled) {
+  buttonEl.disabled = disabled;
+  inputEl.disabled = disabled;
+}
+
+function focusInput() {
+  inputEl.focus();
+}
+
+function loadToken() {
+  return localforage.getItem("token").then(storedToken => {
+    metadata.token = storedToken;
+  });
+}
+
+function storeToken() {
+  localforage.setItem("token", metadata.token);
+}
 
 function writeMessage(author, message) {
-  let msgEl = document.createElement("div");
-  let msgContentEl = document.createElement("div");
-  let authorEl = document.createElement("div");
+  const msgEl = document.createElement("div");
+  const msgContentEl = document.createElement("div");
+  const authorEl = document.createElement("div");
 
   msgEl.classList.add("msg-wrap");
   authorEl.classList.add("author");
@@ -49,11 +71,13 @@ function handleLogin(arg0) {
 
   request.setUsername(username);
 
-  const stream = client.login(request, {}, (err, response) => {
+  client.login(request, metadata, (err, response) => {
     if(err) {
       writeMessage('[ERROR]', err.message);
     } else {
       writeMessage('[SYSTEM]', "Logged in as " + username);
+      metadata.token = response.getAuthToken();;
+      storeToken();
     }
   });
 }
@@ -64,26 +88,29 @@ function handleJoin(arg0) {
   const request = new JoinChannelRequest();
   request.setChannelName(channel);
 
-  const stream = client.joinChannel(request);
+  if(channelStream) {
+    channelStream.cancel();
+  }
 
-  stream.on('status', (status) => {
+  channelStream = client.joinChannel(request, metadata);
+
+  writeMessage("Joined channel: " + channel);
+
+  channelStream.on('status', (status) => {
     writeMessage('[SYSTEM]', 'status ' + status);
   });
 
-  stream.on('data', msg => {
+  channelStream.on('data', msg => {
     writeMessage(msg.getAuthor(), msg.getText());
   });
 
-  stream.on('error', (err) => {
+  channelStream.on('error', (err) => {
     writeMessage('[ERROR]', err.message);
   });
 
-  stream.on('end', () => {
+  channelStream.on('end', () => {
     writeMessage('[SYSTEM]', 'Channel stream end');
   });
-
-  console.log('stream:', stream);
-  window.currentStream = stream;
 }
 
 function handleCommand(command, args) {
@@ -103,11 +130,33 @@ function handleCommand(command, args) {
       }
       return handleJoin(args[0]);
     case 'shrug':
-      return writeMessage(username, `¯\\_(ツ)_/¯`);
+      return sendMessage(`¯\\_(ツ)_/¯`);
     default:
       writeMessage('[SYSTEM]', `Unknown command '${command}'`);
   }
 }
+
+function sendMessage(msg) {
+  const request = new ChatMessageRequest();
+  request.setText(msg);
+
+  const stream = client.sendMessage(request, metadata, (err) => {
+    if(err) {
+      writeMessage('[ERROR]', err.message);
+    } else {
+      // We should receive our own message from the join stream
+    }
+  });
+}
+
+disableInput(true);
+Promise.all([
+  handleJoin("general"),
+  loadToken()
+]).then(() => {
+  disableInput(false);
+  focusInput();
+});
 
 inputForm.onsubmit = (e) => {
   e.preventDefault();
@@ -123,7 +172,7 @@ inputForm.onsubmit = (e) => {
     args.splice(0, 1);
     handleCommand(command, args);
   } else {
-    writeMessage(username, inputEl.value);
+    sendMessage(inputEl.value);
   }
 
   inputEl.value = "";
